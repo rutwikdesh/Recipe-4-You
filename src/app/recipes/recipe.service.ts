@@ -11,16 +11,16 @@ export class RecipeService {
 
   private recipes: Recipe[] = [
     new Recipe(
-      'A Test Recipe',
-      'This is simply a test',
-      'https://upload.wikimedia.org/wikipedia/commons/1/15/Recipe_logo.jpeg',
-      [new Ingredient('Bread', 1), new Ingredient('Corn Flakes', 2)]
+      'Paneer Kadhai Masala',
+      'A hot masala and spicy paneer kadhai, made with a host of spices and tomatoes, served with ajwain roti.',
+      'https://c.ndtvimg.com/2019-09/tlps304o_paneer_625x300_24_September_19.jpg',
+      [new Ingredient('Refined flour', 1), new Ingredient('Carom seeds', 2)]
     ),
     new Recipe(
-      'Another Test Recipe',
-      'This is simply a test',
-      'https://upload.wikimedia.org/wikipedia/commons/1/15/Recipe_logo.jpeg',
-      [new Ingredient('Milk', 1), new Ingredient('Jam', 1)]
+      'Veg Cheese Burst Pizza',
+      'A cheese burst that has Mozzarella cheese and Dairy Cheese Sauce which contains Cheddar cheese',
+      'https://i.pinimg.com/originals/eb/ee/e8/ebeee82a42e0428d299f86ab74faf77a.jpg',
+      [new Ingredient('Cheese', 1), new Ingredient('Dairy Cheese Sauce', 3)]
     ),
   ];
 
