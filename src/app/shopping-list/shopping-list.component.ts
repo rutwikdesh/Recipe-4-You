@@ -20,4 +20,8 @@ export class ShoppingListComponent implements OnInit {
   ngOnChange() {
     this.ingredients = this.shoppingListService.getIngredients();
   }
+
+  onEditItem(index: number) {
+    this.shoppingListService.startedEditing.next(index);
+  }
 }
