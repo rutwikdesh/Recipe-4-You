@@ -41,7 +41,6 @@ export class AuthComponent {
         this.router.navigate(['/recipes']);
       },
       error: (e) => {
-        console.log(e);
         this.error = this.authService.getError(e.error.error.message);
         this.isLoading = false;
       },

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import { User } from './user.model';
+import { Router } from '@angular/router';
 
 export interface AuthResponseData {
   kind: string;
@@ -17,8 +18,9 @@ export interface AuthResponseData {
 export class AuthService {
   user = new BehaviorSubject<User>(null);
   token: string = null;
+  private tokenExpTimer: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   private handleUserAuth(
     email: string,
@@ -26,9 +28,11 @@ export class AuthService {
     token: string,
     expiresIn: string
   ) {
-    const tokenExpiresIn = new Date(new Date().getTime() + +expiresIn * 1000);
+    const tokenExpiresIn = new Date(new Date().getTime() + +expiresIn * 10000);
     const user = new User(email, id, token, tokenExpiresIn);
     this.user.next(user);
+    this.autoLogout(+expiresIn * 1000);
+    localStorage.setItem('userInfo', JSON.stringify(user));
   }
 
   signUp(email: string, password: string) {
@@ -46,8 +50,8 @@ export class AuthService {
           this.handleUserAuth(
             resData.email,
             resData.localId,
-            resData.localId,
-            resData.idToken
+            resData.idToken,
+            resData.expiresIn
           );
           this.token = resData.idToken;
         })
@@ -69,8 +73,8 @@ export class AuthService {
           this.handleUserAuth(
             resData.email,
             resData.localId,
-            resData.localId,
-            resData.idToken
+            resData.idToken,
+            resData.expiresIn
           );
           this.token = resData.idToken;
         })
@@ -79,6 +83,40 @@ export class AuthService {
 
   logOut() {
     this.user.next(null);
+    this.router.navigate(['/auth']);
+    localStorage.removeItem('userInfo');
+    if (this.tokenExpTimer) {
+      clearTimeout(this.tokenExpTimer);
+    }
+    this.tokenExpTimer = null;
+  }
+
+  autoLogout(expDuration: number) {
+    this.tokenExpTimer = setTimeout(() => {
+      this.logOut();
+    }, expDuration);
+  }
+
+  autoLogin() {
+    const userinfo = JSON.parse(localStorage.getItem('userInfo'));
+    if (!userinfo) {
+      return;
+    }
+    const loadedUser = new User(
+      userinfo.email,
+      userinfo.id,
+      userinfo._token,
+      new Date(userinfo._tokenExpirationDate)
+    );
+
+    if (loadedUser.token) {
+      this.user.next(loadedUser);
+      const expDuration =
+        new Date(userinfo._tokenExpirationDate).getTime() -
+        new Date().getTime();
+      this.token = loadedUser.token;
+      this.autoLogout(expDuration);
+    }
   }
 
   getError(e: string) {

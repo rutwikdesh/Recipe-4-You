@@ -42,7 +42,6 @@ export class DataStorageService {
       )
       .subscribe((recipes) => {
         this.recipeService.setRecipes(recipes);
-        console.log(recipes);
       });
   }
 }
