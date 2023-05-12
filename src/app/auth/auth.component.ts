@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { AuthResponseData, AuthService } from './auth.service';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
 })
 export class AuthComponent {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
   isLogin: boolean = true;
   isLoading: boolean = false;
   error: string = null;
@@ -34,14 +35,15 @@ export class AuthComponent {
     }
 
     authObs.subscribe({
+      complete: () => {
+        this.isLoading = false;
+        this.error = null;
+        this.router.navigate(['/recipes']);
+      },
       error: (e) => {
         console.log(e);
         this.error = this.authService.getError(e.error.error.message);
         this.isLoading = false;
-      },
-      complete: () => {
-        this.isLoading = false;
-        this.error = null;
       },
     });
 

@@ -8,18 +8,18 @@ export class RecipeService {
   constructor(private shoppingListService: ShoppingListService) {}
 
   private recipes: Recipe[] = [
-    new Recipe(
-      'Paneer Kadhai Masala',
-      'A hot masala and spicy paneer kadhai, made with a host of spices and tomatoes, served with ajwain roti.',
-      'https://c.ndtvimg.com/2019-09/tlps304o_paneer_625x300_24_September_19.jpg',
-      [new Ingredient('Refined flour', 1), new Ingredient('Carom seeds', 2)]
-    ),
-    new Recipe(
-      'Veg Cheese Burst Pizza',
-      'A cheese burst that has Mozzarella cheese and Dairy Cheese Sauce which contains Cheddar cheese',
-      'https://i.pinimg.com/originals/eb/ee/e8/ebeee82a42e0428d299f86ab74faf77a.jpg',
-      [new Ingredient('Cheese', 1), new Ingredient('Dairy Cheese Sauce', 3)]
-    ),
+    // new Recipe(
+    //   'Paneer Kadhai Masala',
+    //   'A hot masala and spicy paneer kadhai, made with a host of spices and tomatoes, served with ajwain roti.',
+    //   'https://c.ndtvimg.com/2019-09/tlps304o_paneer_625x300_24_September_19.jpg',
+    //   [new Ingredient('Refined flour', 1), new Ingredient('Carom seeds', 2)]
+    // ),
+    // new Recipe(
+    //   'Veg Cheese Burst Pizza',
+    //   'A cheese burst that has Mozzarella cheese and Dairy Cheese Sauce which contains Cheddar cheese',
+    //   'https://i.pinimg.com/originals/eb/ee/e8/ebeee82a42e0428d299f86ab74faf77a.jpg',
+    //   [new Ingredient('Cheese', 1), new Ingredient('Dairy Cheese Sauce', 3)]
+    // ),
     // new Recipe(
     //   'Mysore Masala Dosa',
     //   'The original Mysore Masala Dosa tastes special. And the speciality is in the whole spectrum, right from making the Batter, roasting the Dosa, the Masala paste applied on the Dosa and the Potato Curry.',

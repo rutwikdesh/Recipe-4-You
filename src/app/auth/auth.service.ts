@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject, tap } from 'rxjs';
+import { User } from './user.model';
 
 export interface AuthResponseData {
   kind: string;
@@ -13,28 +15,70 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  user = new BehaviorSubject<User>(null);
+  token: string = null;
+
   constructor(private http: HttpClient) {}
 
+  private handleUserAuth(
+    email: string,
+    id: string,
+    token: string,
+    expiresIn: string
+  ) {
+    const tokenExpiresIn = new Date(new Date().getTime() + +expiresIn * 1000);
+    const user = new User(email, id, token, tokenExpiresIn);
+    this.user.next(user);
+  }
+
   signUp(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8B82huFFxaLH0HPL54yjhSbwZ9TvBd-0',
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      }
-    );
+    return this.http
+      .post<AuthResponseData>(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyB8B82huFFxaLH0HPL54yjhSbwZ9TvBd-0',
+        {
+          email: email,
+          password: password,
+          returnSecureToken: true,
+        }
+      )
+      .pipe(
+        tap((resData) => {
+          this.handleUserAuth(
+            resData.email,
+            resData.localId,
+            resData.localId,
+            resData.idToken
+          );
+          this.token = resData.idToken;
+        })
+      );
   }
 
   login(email: string, password: string) {
-    return this.http.post<AuthResponseData>(
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB8B82huFFxaLH0HPL54yjhSbwZ9TvBd-0',
-      {
-        email: email,
-        password: password,
-        returnSecureToken: true,
-      }
-    );
+    return this.http
+      .post<AuthResponseData>(
+        'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyB8B82huFFxaLH0HPL54yjhSbwZ9TvBd-0',
+        {
+          email: email,
+          password: password,
+          returnSecureToken: true,
+        }
+      )
+      .pipe(
+        tap((resData) => {
+          this.handleUserAuth(
+            resData.email,
+            resData.localId,
+            resData.localId,
+            resData.idToken
+          );
+          this.token = resData.idToken;
+        })
+      );
+  }
+
+  logOut() {
+    this.user.next(null);
   }
 
   getError(e: string) {
