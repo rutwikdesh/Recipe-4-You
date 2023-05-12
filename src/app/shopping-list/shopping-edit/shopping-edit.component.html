@@ -39,7 +39,7 @@
             class="btn btn-danger spacing"
             type="button"
             (click)="onDelete()"
-            [disabled]="!editMode"
+            *ngIf="editMode"
           >
             Delete
           </button>

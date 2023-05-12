@@ -4,16 +4,23 @@
   [routerLink]="[index]"
   routerLinkActive="active"
 >
-  <div class="pull-left">
-    <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
-    <p class="list-group-item-text">{{ recipe.description }}</p>
+  <div style="display: flex; flex-direction: column">
+    <div class="pull-left">
+      <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
+    </div>
+    <div style="display: flex; justify-content: space-between">
+      <div class="list-group-item-text pull-left col-xs-9">
+        {{ recipe.description }}
+      </div>
+
+      <div class="pull-right">
+        <img
+          [src]="recipe.imagePath"
+          alt="{{ recipe.name }}"
+          class="img-responsive"
+          style="max-height: 50px"
+        />
+      </div>
+    </div>
   </div>
-  <span class="pull-right">
-    <img
-      [src]="recipe.imagePath"
-      alt="{{ recipe.name }}"
-      class="img-responsive"
-      style="max-height: 50px"
-    />
-  </span>
 </a>
