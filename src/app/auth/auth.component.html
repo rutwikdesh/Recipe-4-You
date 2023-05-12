@@ -1,43 +1,76 @@
 <div class="row">
-  <div class="col-xs-12">
-    <div *ngIf="isLoading">
-      <app-loading-spinner></app-loading-spinner>
+  <div
+    class="col-xs-12"
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 5%;
+    "
+  >
+    <div class="col-xs-5">
+      <div class="alert alert-danger" *ngIf="error">
+        <p>{{ error }}</p>
+      </div>
+      <div
+        *ngIf="isLoading"
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <app-loading-spinner></app-loading-spinner>
+      </div>
+      <form #form="ngForm" *ngIf="!isLoading" (ngSubmit)="onSubmit(form)">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            ngModel
+            name="email"
+            required
+            email
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            ngModel
+            name="password"
+            required
+            minlength="6"
+          />
+        </div>
+        <div class="form-group" style="padding-bottom: 4%">
+          <button
+            class="btn btn-primary col-xs-12"
+            [disabled]="!form.valid"
+            type="submit"
+            *ngIf="!isLogin"
+          >
+            Sign Up
+          </button>
+          <button
+            class="btn btn-success col-xs-12"
+            [disabled]="!form.valid"
+            type="submit"
+            *ngIf="isLogin"
+          >
+            Login
+          </button>
+        </div>
+        <div class="form-group" style="padding-top: 4%; text-align: center">
+          <a (click)="onModeSwitch()" style="cursor: pointer">
+            {{
+              isLogin
+                ? "Dont' have an account? Sign Up"
+                : "Already Have an account? Login"
+            }}
+          </a>
+        </div>
+      </form>
     </div>
-    <form #form="ngForm" *ngIf="!isLoading" (ngSubmit)="onSubmit(form)">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          class="form-control"
-          ngModel
-          name="email"
-          required
-          email
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          class="form-control"
-          ngModel
-          name="password"
-          required
-          minlength="6"
-        />
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary" [disabled]="!form.valid" type="submit">
-          {{ isLogin ? "Login" : "Sign Up" }}
-        </button>
-      </div>
-      <div class="form-group">
-        <button class="btn btn-primary" (click)="onModeSwitch()">
-          Switch to {{ isLogin ? "Sign Up" : "Login" }}
-        </button>
-      </div>
-    </form>
   </div>
 </div>

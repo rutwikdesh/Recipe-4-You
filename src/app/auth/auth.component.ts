@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { AuthService } from './auth.service';
+import { AuthResponseData, AuthService } from './auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-auth',
@@ -8,28 +9,42 @@ import { AuthService } from './auth.service';
 })
 export class AuthComponent {
   constructor(private authService: AuthService) {}
-  isLogin = true;
-  isLoading = false;
+  isLogin: boolean = true;
+  isLoading: boolean = false;
+  error: string = null;
 
   onModeSwitch() {
     this.isLogin = !this.isLogin;
   }
 
   onSubmit(form: NgForm) {
-    this.isLoading = true;
     if (!form.valid) {
       return;
     }
     const email = form.value.email;
     const password = form.value.password;
+    this.isLoading = true;
+
+    let authObs: Observable<AuthResponseData>;
 
     if (this.isLogin) {
+      authObs = this.authService.login(email, password);
     } else {
-      this.authService.signUp(email, password).subscribe({
-        error: (e) => console.log(e),
-      });
+      authObs = this.authService.signUp(email, password);
     }
-    this.isLoading = false;
+
+    authObs.subscribe({
+      error: (e) => {
+        console.log(e);
+        this.error = this.authService.getError(e.error.error.message);
+        this.isLoading = false;
+      },
+      complete: () => {
+        this.isLoading = false;
+        this.error = null;
+      },
+    });
+
     form.reset();
   }
 }
